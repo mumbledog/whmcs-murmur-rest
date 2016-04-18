@@ -1,0 +1,7 @@
+# I use Makefiles to put these to my testing server.
+# They don't really need to be public
+Makefile
+sftp.batch
+
+# Editor stuff
+*~
