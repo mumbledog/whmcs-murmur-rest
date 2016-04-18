@@ -2,6 +2,8 @@
 
 A WHMCS module for provisioning and configuring Mumble VOIP servers using Murmur-REST.
 
+**NOTE**: This project is still under development, and probably won't do everything you want yet, much less do so reliably.
+
 ## Configuration
 
 * Clone the repository and copy the relevant files to your WHMCS directory so the modules end up in the right place (whmcsdir/modules/servers/murmurrest).
