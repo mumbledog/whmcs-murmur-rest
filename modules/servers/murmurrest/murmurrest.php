@@ -83,8 +83,7 @@ function murmurrest_CreateAccount($params) {
 		->where('id', (int)$params['serviceid'])
 		->update(
 			[
-				'dedicatedip' => $server->{'address'},
-				'username' => 'SuperUser',
+				'username' => $server->{'address'},
 			]
 		);	
 	
@@ -106,7 +105,7 @@ function murmurrest_CreateAccount($params) {
 }
 
 function murmurrest_ClientArea($params) {
-	$server = $params['templatevars']['dedicatedip'];
+	$server = $params['templatevars']['username'];
 	$output  = sprintf("Server Address: <a href=\"mumble://%s/?version=1.2.0\">%s</a><br />\n", $server, $server);
 	return $output;
 }
