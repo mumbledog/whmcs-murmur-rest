@@ -110,6 +110,30 @@ function murmurrest_ClientArea($params) {
 	return $output;
 }
 
+function murmurrest_ChangePassword(array $params) {
+	# Find the server
+	$address = $params['username'];
+	$server = murmurrest_findServer($params, $address);
+	$id = $server->{'id'};
+
+	# Execute call to change password
+	$url = '/servers/' . $id . '/setsuperuserpw';
+	$post = ['password'=>$params['password']];
+	$ch = murmurrest_buildPostRequest($params, $url , $post);
+	$resp = curl_exec($ch);
+	$code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+	curl_close($ch);
+
+	if ($code == 200)
+		return 'success';
+
+	logModuleCall(
+	        'murmurrest',
+	        __FUNCTION__,
+	        $params,
+	        print_r($server, true), NULL);
+}
+
 # Search for a Mumble server by address (ip:port)
 function murmurrest_findServer($params, $address) {
 	$ch =  murmurrest_buildGetRequest($params, '/servers/');
