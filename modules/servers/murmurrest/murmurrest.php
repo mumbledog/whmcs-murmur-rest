@@ -104,6 +104,66 @@ function murmurrest_CreateAccount($params) {
     return 'success';
 }
 
+function murmurrest_SuspendAccount(array $params) {
+	# Find the server
+	$address = $params['username'];
+	$server = murmurrest_findServer($params, $address);
+	$id = $server->{'id'};
+
+	# Stop the server
+	$url = '/servers/' . $id . '/stop';
+	$ch = murmurrest_buildPostRequest($params, $url , array());
+	$resp = curl_exec($ch);
+	$code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+	curl_close($ch);
+
+	if ($code != 200)
+		return -1;
+
+	# Set the boot flag to 0 so it doesn't come back.
+	$url = '/servers/' . $id . '/conf';
+	$post = ['boot'=>'0'];
+	$ch = murmurrest_buildPostRequest($params, $url , $post);
+	$resp = curl_exec($ch);
+	$code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+	curl_close($ch);
+
+	if ($code == 200)
+		return 'success';
+
+	return -2;
+}
+
+function murmurrest_UnsuspendAccount(array $params) {
+	# Find the server
+	$address = $params['username'];
+	$server = murmurrest_findServer($params, $address);
+	$id = $server->{'id'};
+
+	# Start the server
+	$url = '/servers/' . $id . '/start';
+	$ch = murmurrest_buildPostRequest($params, $url , array());
+	$resp = curl_exec($ch);
+	$code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+	curl_close($ch);
+
+	if ($code != 200)
+		return -1;
+
+	# Set the boot flag to 1 so it boots on server start.
+	$url = '/servers/' . $id . '/conf';
+	$post = ['boot'=>'1'];
+	$ch = murmurrest_buildPostRequest($params, $url , $post);
+	$resp = curl_exec($ch);
+	$code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+	curl_close($ch);
+
+	if ($code == 200)
+		return 'success';
+
+	return -2;
+}
+
 function murmurrest_ClientArea($params) {
 	$server = $params['templatevars']['username'];
 	$output  = sprintf("Server Address: <a href=\"mumble://%s/?version=1.2.0\">%s</a><br />\n", $server, $server);
