@@ -110,6 +110,26 @@ function murmurrest_ClientArea($params) {
 	return $output;
 }
 
+# Search for a Mumble server by address (ip:port)
+function murmurrest_findServer($params, $address) {
+	$ch =  murmurrest_buildGetRequest($params, '/servers/');
+	$resp = curl_exec($ch);
+	$servers = json_decode($resp);
+	$code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+	curl_close($ch);
+
+	if ($code != 200)
+		return -2;
+
+
+	foreach ($servers as $s) {
+		if ($s->{'address'} == $address)
+			return $s;
+	}
+
+	return -1;
+}
+
 # Build a curl handle for a GET request with most of the
 # settings already correct. Returns a curl handle.
 # User is expected to curl_close() it.
