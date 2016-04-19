@@ -166,7 +166,19 @@ function murmurrest_UnsuspendAccount(array $params) {
 
 function murmurrest_ClientArea($params) {
 	$server = $params['templatevars']['username'];
+
+	# Find the server
+	$s = murmurrest_findServer($params, $server);
+
 	$output  = sprintf("Server Address: <a href=\"mumble://%s/?version=1.2.0\">%s</a><br />\n", $server, $server);
+	$output .= sprintf("CVP URL: <a href=\"%s://%s/cvp/%d\">%s://%s/cvp/%d</a>",
+		$params['serverhttpprefix'],
+		$params['serverhostname'],
+		$s->{'id'},
+		$params['serverhttpprefix'],
+		$params['serverhostname'],
+		$s->{'id'});
+
 	return $output;
 }
 
